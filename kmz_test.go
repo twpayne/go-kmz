@@ -18,7 +18,7 @@ func ExampleNewKMZ() {
 		),
 	)
 	w := &bytes.Buffer{}
-	if err := kmz.Write(w); err != nil {
+	if err := kmz.WriteIndent(w, "", "\t"); err != nil {
 		log.Fatal(err)
 	}
 }

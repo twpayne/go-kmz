@@ -36,7 +36,7 @@ func (kmz *KMZ) Write(w io.Writer) error {
 	if err != nil {
 		return err
 	}
-	if err := kml.KML(kml.Document(kmz.roots...)).Write(f); err != nil {
+	if err := kml.GxKML(kml.Document(kmz.roots...)).Write(f); err != nil {
 		return err
 	}
 	for filename, content := range kmz.files {
