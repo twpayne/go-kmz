@@ -24,4 +24,4 @@ func ExampleNewKMZ() {
 }
 ```
 
-[Licence](LICENCE)
+[License](LICENSE)
