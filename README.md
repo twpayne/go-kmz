@@ -1,5 +1,8 @@
 # go-kmz
 
+[![Build
+Status](https://travis-ci.org/twpayne/go-kmz.svg?branch=master)](https://travis-ci.org/twpayne/go-kmz)
+
 Package kmz provides convenience methods for creating and writing KMZ files.
 
 See https://godoc.org/github.com/twpayne/go-kmz.
