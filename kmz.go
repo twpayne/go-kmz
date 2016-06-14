@@ -8,11 +8,13 @@ import (
 	"github.com/twpayne/go-kml"
 )
 
+// A KMZ represents the contents of a KMZ file.
 type KMZ struct {
 	roots []kml.Element
 	files map[string][]byte
 }
 
+// NewKMZ returns a new KMZ with the specified roots.
 func NewKMZ(roots ...kml.Element) *KMZ {
 	return &KMZ{
 		roots: roots,
@@ -20,13 +22,15 @@ func NewKMZ(roots ...kml.Element) *KMZ {
 	}
 }
 
+// AddRoot adds root as a root.
 func (kmz *KMZ) AddRoot(root kml.Element) *KMZ {
 	kmz.roots = append(kmz.roots, root)
 	return kmz
 }
 
-func (kmz *KMZ) AddFile(filename string, content []byte) *KMZ {
-	kmz.files[filename] = content
+// AddFile adds a file named filename with contents to contents.
+func (kmz *KMZ) AddFile(filename string, contents []byte) *KMZ {
+	kmz.files[filename] = contents
 	return kmz
 }
 
@@ -51,12 +55,14 @@ func (kmz *KMZ) write(w io.Writer, writeRoots func(io.Writer, []kml.Element) err
 	return zw.Close()
 }
 
+// Write writes the KMZ file to w.
 func (kmz *KMZ) Write(w io.Writer) error {
 	return kmz.write(w, func(w io.Writer, roots []kml.Element) error {
 		return kml.GxKML(kml.Document(kmz.roots...)).Write(w)
 	})
 }
 
+// WriteIndent writes the KMZ file to w with indentation.
 func (kmz *KMZ) WriteIndent(w io.Writer, prefix, indent string) error {
 	return kmz.write(w, func(w io.Writer, roots []kml.Element) error {
 		return kml.GxKML(kml.Document(kmz.roots...)).WriteIndent(w, prefix, indent)
