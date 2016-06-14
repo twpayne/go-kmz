@@ -30,13 +30,13 @@ func (kmz *KMZ) AddFile(filename string, content []byte) *KMZ {
 	return kmz
 }
 
-func (kmz *KMZ) Write(w io.Writer) error {
+func (kmz *KMZ) write(w io.Writer, writeRoots func(io.Writer, []kml.Element) error) error {
 	zw := zip.NewWriter(w)
-	f, err := zw.Create("doc.kml")
+	rootW, err := zw.Create("doc.kml")
 	if err != nil {
 		return err
 	}
-	if err := kml.GxKML(kml.Document(kmz.roots...)).Write(f); err != nil {
+	if err := writeRoots(rootW, kmz.roots); err != nil {
 		return err
 	}
 	for filename, content := range kmz.files {
@@ -48,8 +48,17 @@ func (kmz *KMZ) Write(w io.Writer) error {
 			return err
 		}
 	}
-	if err := zw.Close(); err != nil {
-		return err
-	}
-	return nil
+	return zw.Close()
+}
+
+func (kmz *KMZ) Write(w io.Writer) error {
+	return kmz.write(w, func(w io.Writer, roots []kml.Element) error {
+		return kml.GxKML(kml.Document(kmz.roots...)).Write(w)
+	})
+}
+
+func (kmz *KMZ) WriteIndent(w io.Writer, prefix, indent string) error {
+	return kmz.write(w, func(w io.Writer, roots []kml.Element) error {
+		return kml.GxKML(kml.Document(kmz.roots...)).WriteIndent(w, prefix, indent)
+	})
 }
